@@ -25,8 +25,6 @@ def clear_kind_table():
         print("Error clearing kind table:", e)
 
 def insert_data_with_threads(num_times, num_threads):
-    conn = psycopg2.connect(**connection_configs)
-    
     def insert_thread():
         for _ in range(num_times // num_threads):
             data = generate_component_kind()
@@ -40,11 +38,8 @@ def insert_data_with_threads(num_times, num_threads):
 
     for thread in threads:
         thread.join()
-    conn.close()
 
 def insert_multiple_kind_data_with_threads(num_times, num_threads):
-    conn = psycopg2.connect(**connection_configs)
-    
     def insert_thread():
         for i in range(num_times // num_threads):
             if i % 4 == 0:
@@ -65,7 +60,6 @@ def insert_multiple_kind_data_with_threads(num_times, num_threads):
 
     for thread in threads:
         thread.join()
-    conn.close()        
 
 def insert_kind(data):
     try:
