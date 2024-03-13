@@ -26,9 +26,13 @@ def clear_kind_table():
 
 def insert_data_with_threads(num_times, num_threads):
     def insert_thread():
+        conn = psycopg2.connect(**connection_configs)
         for _ in range(num_times // num_threads):
+            if conn.closed:
+                conn = psycopg2.connect(**connection_configs)
             data = generate_component_kind()
-            insert_kind(data)
+            insert_kind_at_once(data, conn)
+        conn.close()
 
     threads = []
     for _ in range(num_threads):
@@ -41,7 +45,10 @@ def insert_data_with_threads(num_times, num_threads):
 
 def insert_multiple_kind_data_with_threads(num_times, num_threads):
     def insert_thread():
+        conn = psycopg2.connect(**connection_configs)
         for i in range(num_times // num_threads):
+            if conn.closed:
+                conn = psycopg2.connect(**connection_configs)
             if i % 4 == 0:
                 data = generate_project_kind()
             elif i % 4 == 1:
@@ -50,7 +57,8 @@ def insert_multiple_kind_data_with_threads(num_times, num_threads):
                 data = generate_build_kind()
             else:
                 data = generate_deployment_kind()
-            insert_kind(data)
+            insert_kind_at_once(data, conn)
+        conn.close()
 
     threads = []
     for _ in range(num_threads):
@@ -72,3 +80,14 @@ def insert_kind(data):
         conn.close()
     except Exception as e:
         print("Error inserting kind data:", e)
+
+def insert_kind_at_once(data, conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            sql.SQL("INSERT INTO kind (value) VALUES (%s)"), (json.dumps(data),)
+        )
+        conn.commit()
+    except Exception as e:
+        print("Error inserting kind data:", e)
+
