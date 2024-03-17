@@ -5,11 +5,12 @@ fake = Faker()
 
 def generate_component_kind():
     component_name = fake.name()
+    uuid_str = str(uuid.uuid4())
     fake_data = {
         "apiVersion": "core.choreo.dev/v1alpha1",
         "kind": "Component",
         "metadata": {
-            "name": component_name.lower().replace(' ', '_'),
+            "name": component_name.lower().replace(' ', '_') + "_" + uuid_str + "_" + fake.word(),
             "projectName": fake.word(),
             "displayName": component_name
         },
