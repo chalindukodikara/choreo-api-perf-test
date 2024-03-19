@@ -17,7 +17,7 @@ def clear_kind_table():
     try:
         conn = psycopg2.connect(**connection_configs)
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM kind")
+        cursor.execute("TRUNCATE TABLE kind")
         conn.commit()
         conn.close()
         print("Kind table cleared successfully.")

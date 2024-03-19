@@ -1,3 +1,5 @@
 venv_choreo_api/
 venv*/
 __pycache__/
+configs*
+configs.json

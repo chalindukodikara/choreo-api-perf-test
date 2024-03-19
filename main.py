@@ -5,7 +5,7 @@ from utils import get_input
 import time
 import os
 
-NUM_OF_THREADS = 24
+NUM_OF_THREADS = 40
 # NUM_OF_THREADS = os.cpu_count()
 # print("Number of threads:", NUM_OF_THREADS)
 # if os.cpu_count() == None:
